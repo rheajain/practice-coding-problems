@@ -1,0 +1,40 @@
+//Question- https://www.interviewbit.com/problems/recover-binary-search-tree/
+//Space complexity- O(n)
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ void getArray( TreeNode* X, vector<int> &arr){
+     if(X!=NULL){
+         getArray(X->left, arr);
+         arr.push_back(X->val);
+         //cout<<"pushing="<<X->val<<endl;
+         getArray(X->right, arr);
+     }
+ }
+vector<int> Solution::recoverTree(TreeNode* A) {
+    vector<int> arr, res;
+    getArray(A, arr);
+    //cout<<"size="<<arr.size()<<" ended"<<endl;
+    int i, j;
+    for(i=0; i<arr.size()-1; i++){
+        if(arr[i]>arr[i+1]){
+            //cout<<"First = "<<arr[i]<<endl;;
+            res.push_back(arr[i]);
+            break;
+        }
+    }
+    for(j=arr.size()-1; j>i; j--){
+        if(arr[j]<arr[j-1]){
+            res.insert(res.begin(), arr[j]);
+            break;
+        }
+    }
+    return res;
+}
