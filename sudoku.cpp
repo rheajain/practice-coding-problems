@@ -22,12 +22,12 @@ bool checkCol(int j, int k, vector<vector<char>> &A){
 
 bool checkBox(int i, int j, int k, vector<vector<char>> &A){
     char c= '0'+ k;
-    int x = i/3;
-    int y = j/3;
-    int xm= x+3, ym=y+3;
+    int x = (i/3)*3;
+    int y = (j/3)*3;
+    int xm= x+3, ym=y+3, l;
     for(x; x<xm; x++){
-        for(y; y<ym; y++){
-            if(A[x][y]==c){
+        for(l=y; l<ym; l++){
+            if(A[x][l]==c){
                 return false;
             }
         } 
