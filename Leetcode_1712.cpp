@@ -52,28 +52,37 @@ public:
             mid =((j-i)/2)+i;
             rightSum = sumArr[n-1] - sumArr[mid-1];
             midSum = sumArr[mid-1] - leftSum;
-            if( midSum>rightSum && midSum<leftSum)
+            if( midSum>rightSum)
             {
-                break;
-            }
-            else if( midSum>rightSum && midSum>=leftSum)
-            {
-                j=mid-1;
-            }
-            else if(midSum<leftSum && midSum<=rightSum)
-            {
-                i=mid+1;
-            }
-            else if(midSum <= rightSum && leftSum <= midSum)
-            {
-                res=mid;
-                if(isLower)
+                if(midSum<leftSum)
                 {
-                    j=mid-1;
+                    break;
                 }
                 else
                 {
+                    //move left
+                    j=mid-1;
+                }
+            }
+            else //midSum<=rightSum
+            {
+                if(midSum<leftSum)
+                {
                     i=mid+1;
+                }
+                else
+                {
+                    res=mid;
+                    if(isLower)
+                    {
+                        //move left
+                        j=mid-1;
+                    }
+                    else
+                    {
+                        //move right
+                        i=mid+1;
+                    }
                 }
             }
         }
