@@ -1,51 +1,66 @@
-class Solution{
-    public:
+#include <list>
+class Solution {
+public:
+    /**
+     * @param words: a list of words
+     * @return: a string which is correct order
+     */
     string res;
-    string findOrder(string dict[], int N, int K) {
+    string alienOrder(vector<string> &words) {
         unordered_map<char,list<char>> adjacencyList;
         unordered_set<char> visited, visitedInPath, allLetters;
-        int n=N, i,j, k;
+        int n=words.size(), i,j, k;
         //build adjacency list
         for(i=1; i<n; i++) {
             j=0;
-            while(j<dict[i-1].size() && j<dict[i].size() && dict[i-1][j] == dict[i][j]){
-                if(allLetters.find(dict[i][j])==allLetters.end())
-                    allLetters.insert(dict[i][j]);
+            while(j<words[i-1].size() && j<words[i].size() && words[i-1][j] == words[i][j]){
+                if(allLetters.find(words[i][j])==allLetters.end())
+                    allLetters.insert(words[i][j]);
                 j++;
             }
-            if(j<dict[i-1].size() && j<dict[i].size()) {
+            if(j<words[i-1].size() && j<words[i].size()) {
                 //add relation to the adjacencyList
-                adjacencyList[dict[i-1][j]].push_back(dict[i][j]);
-                    //cout<<"Adding to adjacency list "<<words[i-1][j]<<"->"<<words[i][j]; 
+                adjacencyList[words[i-1][j]].push_back(words[i][j]);
+            }
+            else {
+                if(words[i-1].size()>words[i].size())
+                {
+                    return "";
+                }
             }
             k=j;
-            while(j<dict[i-1].size())
+            while(j<words[i-1].size())
             {
-                if(allLetters.find(dict[i-1][j])==allLetters.end())
-                    allLetters.insert(dict[i-1][j]);
+                if(allLetters.find(words[i-1][j])==allLetters.end())
+                    allLetters.insert(words[i-1][j]);
                 j++;
             }
-            while(k<dict[i].size())
+            while(k<words[i].size())
             {
-                if(allLetters.find(dict[i][k])==allLetters.end())
-                    allLetters.insert(dict[i][k]);
+                if(allLetters.find(words[i][k])==allLetters.end())
+                    allLetters.insert(words[i][k]);
                 k++;
             }
         }
         //traverse the graph
-        for(auto c=allLetters.begin(); c!=allLetters.end(); c++)
-            topologicalSortI(*c, adjacencyList, visited, visitedInPath);
+        for(i='z'; i>='a'; i--)
+        {
+            if(allLetters.find((char)i)!=allLetters.end())
+                if(!topologicalSortI(i, adjacencyList, visited, visitedInPath))
+                    return "";
+        }
         return res;
     }
-    void topologicalSortI(char c, unordered_map<char,list<char>>& adjacencyList, unordered_set<char>& visited, unordered_set<char>& visitedInPath)
+    bool topologicalSortI(char c, unordered_map<char,list<char>>& adjacencyList, unordered_set<char>& visited, unordered_set<char> visitedInPath)
     {
-        if(visitedInPath.find(c)!=visitedInPath.end())  return ;
-        if(visited.find(c)!=visited.end())  return;
-        for(auto node=adjacencyList[c].begin(); node!=adjacencyList[c].end(); node++)
-            topologicalSortI(*node, adjacencyList, visited, visitedInPath);
-        //cout<<"\nAdding "<<c;
-        res.insert(0, 1, c);
+        if(visitedInPath.find(c)!=visitedInPath.end())  {return false;}
+        if(visited.find(c)!=visited.end())  return true;
         visited.insert(c);
         visitedInPath.insert(c);
+        for(auto node=adjacencyList[c].begin(); node!=adjacencyList[c].end(); node++)
+            if(!topologicalSortI(*node, adjacencyList, visited, visitedInPath))
+                return false;
+        res.insert(0, 1, c);
+        return true;
     }
 };
